@@ -16,7 +16,6 @@ class SaleOrderInherit(models.Model):
                 [('code', '=', 'outgoing'), ('company_id', '=', self.env.company.id), ('name', '=', 'Delivery Orders')])
             product_location = self.env['stock.location'].search(
                 [('name', '=', 'Stock'), ('company_id', '=', self.env.company.id)])
-            destination_location = self.env['stock.location'].search([("usage", '=', 'customer')])
 
             stock_picking_dict = {}
 
@@ -59,8 +58,8 @@ class SaleOrderInherit(models.Model):
             # Confirm each stock picking
             for stock_picking in stock_picking_dict.values():
                 stock_picking.action_confirm()
-
-        val = super(SaleOrderInherit, self).action_confirm()
+            self.write({'state': 'sale'})
+        # val = super(SaleOrderInherit, self).action_confirm()
         return True
 
     def action_multiple_sale_order_delivery(self):
